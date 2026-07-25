@@ -14,8 +14,11 @@ WORKDIR /app
 # pnpm (misma versión que en desarrollo)
 RUN corepack enable && corepack prepare pnpm@11.9.0 --activate
 
-# 1) Dependencias (incluye dev: prisma, tsx y el build las necesitan)
+# 1) Dependencias (incluye dev: prisma, tsx y el build las necesitan).
+#    Se copia el schema antes de instalar porque el postinstall corre
+#    `prisma generate` y necesita ./prisma/schema.prisma.
 COPY package.json pnpm-lock.yaml* .npmrc* ./
+COPY prisma ./prisma
 RUN pnpm install --no-frozen-lockfile --prod=false
 
 # 2) Código + generación de Prisma + build de Next
