@@ -2,7 +2,7 @@
 # Don Antonio · Barbería — imagen para Dokploy / Contabo
 # Next.js 16 + Prisma + SQLite (base de datos en volumen persistente)
 # ─────────────────────────────────────────────────────────────
-FROM node:20-bookworm-slim
+FROM node:22-bookworm-slim
 
 ENV NEXT_TELEMETRY_DISABLED=1 \
     NODE_ENV=production \
