@@ -33,8 +33,10 @@ export function tokenValido(token: string | undefined | null): boolean {
 }
 
 export function passwordCorrecta(intento: string): boolean {
-  const real = process.env.ADMIN_PASSWORD
-  if (!real) return false
+  // Si no se configura ADMIN_PASSWORD, se usa una clave demo por defecto
+  // ("donantonio"). En producción define ADMIN_PASSWORD en las variables
+  // de entorno para reemplazarla.
+  const real = process.env.ADMIN_PASSWORD || 'donantonio'
   const a = Buffer.from(intento)
   const b = Buffer.from(real)
   if (a.length !== b.length) return false

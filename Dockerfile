@@ -31,4 +31,4 @@ EXPOSE 3000
 #   · aplica migraciones a la BD del volumen
 #   · siembra datos demo (re-ancla las citas al día de hoy; conserva las reales)
 #   · levanta el servidor
-CMD ["sh", "-lc", "export NODE_ENV=production; npx prisma migrate deploy && npx tsx prisma/seed.ts && npx next start -p ${PORT:-3000} -H 0.0.0.0"]
+CMD ["sh", "-lc", "export NODE_ENV=production; export ADMIN_SESSION_SECRET=${ADMIN_SESSION_SECRET:-$(head -c32 /dev/urandom | od -An -tx1 | tr -d ' \\n')}; npx prisma migrate deploy && npx tsx prisma/seed.ts && npx next start -p ${PORT:-3000} -H 0.0.0.0"]
