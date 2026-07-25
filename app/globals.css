@@ -589,38 +589,9 @@
   display: revert !important;
 }
 
-/* ── HERO: cada tema compone distinto ─────────────────────────────
-   Clásico/Vintage = centrado (sello, foco). Neón = centrado ancho.
-   Street = cartel callejero alineado a la izquierda. */
-[data-theme='street'] .hero-copy {
-  align-items: flex-start;
-  text-align: left;
-  margin-left: 0;
-  margin-right: auto;
-  max-width: 42rem;
-}
-[data-theme='street'] .hero-line {
-  margin-left: 0;
-}
-[data-theme='street'] .hero-cta {
-  justify-content: flex-start;
-}
-/* En Street el logo del hero se hace a un lado; manda el titular tipo póster */
-[data-theme='street'] .hero-logo {
-  align-self: flex-start;
-}
-
-/* ── SECTION HEADING: alineación por tema ─────────────────────────
-   Street = titulares a la izquierda, tipo fanzine/póster. */
-[data-theme='street'] .section-head {
-  margin-left: 0;
-  text-align: left;
-  align-items: flex-start;
-}
-[data-theme='street'] .section-head .deco-divider {
-  margin-left: 0;
-  margin-right: 0;
-}
+/* Todos los temas usan hero y titulares CENTRADOS (el intento de
+   Street alineado a la izquierda dejaba medio hero vacío en desktop).
+   Street mantiene su identidad por color, tipografía y cinta tricolor. */
 
 /* ══════════════════════════════════════════════════════════════════
    FOTOS con tratamiento de color por tema (duotono / tinte).

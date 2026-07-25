@@ -14,6 +14,9 @@ import {
   setEstadoReserva,
   crearBloqueo,
   quitarBloqueo,
+  bloquearDia,
+  bloquearRango,
+  liberarDia,
   upsertServicio,
   toggleServicio,
   updateHorario,
@@ -68,6 +71,34 @@ export async function liberarFranja(formData: FormData) {
   const id = String(formData.get('id'))
   if (!id) return
   await quitarBloqueo(id)
+  revalidatePath('/admin/agenda')
+}
+
+export async function bloquearDiaAccion(formData: FormData) {
+  await requireAdmin()
+  const fecha = String(formData.get('fecha'))
+  const motivo = String(formData.get('motivo') ?? '').trim() || undefined
+  if (!fecha) return
+  await bloquearDia(fecha, motivo)
+  revalidatePath('/admin/agenda')
+}
+
+export async function bloquearRangoAccion(formData: FormData) {
+  await requireAdmin()
+  const fecha = String(formData.get('fecha'))
+  const desde = String(formData.get('desde'))
+  const hasta = String(formData.get('hasta'))
+  const motivo = String(formData.get('motivo') ?? '').trim() || undefined
+  if (!fecha || !desde || !hasta) return
+  await bloquearRango(fecha, desde, hasta, motivo)
+  revalidatePath('/admin/agenda')
+}
+
+export async function liberarDiaAccion(formData: FormData) {
+  await requireAdmin()
+  const fecha = String(formData.get('fecha'))
+  if (!fecha) return
+  await liberarDia(fecha)
   revalidatePath('/admin/agenda')
 }
 

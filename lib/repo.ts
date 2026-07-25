@@ -400,3 +400,62 @@ export async function listBloqueos(fechaISO: string) {
     orderBy: { hora: 'asc' },
   })
 }
+
+// Horas del día que YA no se pueden reservar (por cita o por bloqueo previo).
+async function horasNoLibres(fechaISO: string, h: Horario): Promise<Set<string>> {
+  const { desde, hasta } = rangoDia(fechaISO)
+  const [reservas, bloqueos] = await Promise.all([
+    prisma.reserva.findMany({
+      where: { fecha: { gte: desde, lt: hasta }, estado: { not: 'cancelada' } },
+      select: { hora: true, duracionTotal: true },
+    }),
+    prisma.bloqueo.findMany({ where: { fecha: { gte: desde, lt: hasta } }, select: { hora: true } }),
+  ])
+  const set = new Set<string>()
+  for (const r of reservas) for (const s of slotsCubiertos(r.hora, r.duracionTotal, h)) set.add(s)
+  for (const b of bloqueos) set.add(b.hora)
+  return set
+}
+
+// Bloquea TODAS las franjas libres del día (el barbero cierra la jornada).
+export async function bloquearDia(fechaISO: string, motivo = 'Día cerrado') {
+  const h = await getHorario()
+  const { desde } = rangoDia(fechaISO)
+  const noLibres = await horasNoLibres(fechaISO, h)
+  const aBloquear = gridHoras(h.apertura, h.cierre, h.pasoMin).filter((x) => !noLibres.has(x))
+  if (aBloquear.length === 0) return { creados: 0 }
+  await prisma.bloqueo.createMany({
+    data: aBloquear.map((hora) => ({ fecha: desde, hora, motivo })),
+  })
+  return { creados: aBloquear.length }
+}
+
+// Bloquea un rango [desde, hasta) del día (ej. almuerzo, media tarde).
+export async function bloquearRango(
+  fechaISO: string,
+  horaDesde: string,
+  horaHasta: string,
+  motivo?: string,
+) {
+  const h = await getHorario()
+  const { desde } = rangoDia(fechaISO)
+  const ini = aMinutos(horaDesde)
+  const fin = aMinutos(horaHasta)
+  if (fin <= ini) return { creados: 0 }
+  const noLibres = await horasNoLibres(fechaISO, h)
+  const aBloquear = gridHoras(h.apertura, h.cierre, h.pasoMin).filter((x) => {
+    const t = aMinutos(x)
+    return t >= ini && t < fin && !noLibres.has(x)
+  })
+  if (aBloquear.length === 0) return { creados: 0 }
+  await prisma.bloqueo.createMany({
+    data: aBloquear.map((hora) => ({ fecha: desde, hora, motivo: motivo || 'Bloqueado' })),
+  })
+  return { creados: aBloquear.length }
+}
+
+// Libera TODOS los bloqueos del día.
+export async function liberarDia(fechaISO: string) {
+  const { desde, hasta } = rangoDia(fechaISO)
+  return prisma.bloqueo.deleteMany({ where: { fecha: { gte: desde, lt: hasta } } })
+}

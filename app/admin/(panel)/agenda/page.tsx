@@ -1,11 +1,17 @@
 import Link from 'next/link'
-import { Ban, Plus } from 'lucide-react'
+import { Ban, Plus, CalendarX2, Unlock } from 'lucide-react'
 import { listAgenda, listBloqueos, getSlots } from '@/lib/repo'
 import { DIAS } from '@/lib/mock-data'
 import { fechaLarga, isoLocal } from '@/lib/format'
 import { CitaCard, type CitaVista } from '@/components/admin/cita-card'
 import { AutoRefresh } from '@/components/admin/auto-refresh'
-import { bloquearFranja, liberarFranja } from '@/app/admin/actions'
+import {
+  bloquearFranja,
+  liberarFranja,
+  bloquearDiaAccion,
+  bloquearRangoAccion,
+  liberarDiaAccion,
+} from '@/app/admin/actions'
 
 export const dynamic = 'force-dynamic'
 
@@ -41,6 +47,8 @@ export default async function AgendaPage({
   ])
   const citas = agenda.map(aVista)
   const libres = slots.filter((s) => !s.ocupado).map((s) => s.hora)
+  const todasLibres = libres
+  const horasGrid = slots.map((s) => s.hora)
 
   return (
     <div className="mx-auto max-w-4xl">
@@ -88,13 +96,45 @@ export default async function AgendaPage({
         )}
       </section>
 
-      {/* Bloqueos de horario */}
+      {/* Control de horarios / bloqueos */}
       <section className="mt-8">
-        <h2 className="mb-3 flex items-center gap-2 font-heading text-lg font-bold text-marfil">
+        <h2 className="mb-1 flex items-center gap-2 font-heading text-lg font-bold text-marfil">
           <Ban className="h-4 w-4 text-laton-claro" />
-          Franjas bloqueadas
+          Control de tu tiempo
         </h2>
+        <p className="mb-3 text-sm text-marfil-tenue">
+          Bloquea franjas para que nadie te reserve: una hora, un rango o el día
+          entero.
+        </p>
 
+        {/* Acciones rápidas del día */}
+        <div className="mb-3 flex flex-wrap gap-2">
+          <form action={bloquearDiaAccion}>
+            <input type="hidden" name="fecha" value={seleccionado} />
+            <button
+              type="submit"
+              disabled={todasLibres.length === 0}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-[rgb(248_113_113/0.14)] px-3 py-2 text-sm font-semibold text-[rgb(248_113_113)] transition-colors hover:bg-[rgb(248_113_113/0.24)] disabled:opacity-40"
+            >
+              <CalendarX2 className="h-4 w-4" />
+              Bloquear todo el día
+            </button>
+          </form>
+          {bloqueos.length > 0 && (
+            <form action={liberarDiaAccion}>
+              <input type="hidden" name="fecha" value={seleccionado} />
+              <button
+                type="submit"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-2 text-sm font-semibold text-marfil transition-colors hover:border-laton"
+              >
+                <Unlock className="h-4 w-4" />
+                Liberar día ({bloqueos.length})
+              </button>
+            </form>
+          )}
+        </div>
+
+        {/* Chips de bloqueos existentes (click para liberar uno) */}
         {bloqueos.length > 0 && (
           <div className="mb-3 flex flex-wrap gap-2">
             {bloqueos.map((b) => (
@@ -102,7 +142,7 @@ export default async function AgendaPage({
                 <input type="hidden" name="id" value={b.id} />
                 <button
                   type="submit"
-                  title="Liberar franja"
+                  title="Liberar esta franja"
                   className="group inline-flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-1.5 text-sm text-marfil transition-colors hover:border-[rgb(248_113_113/0.5)]"
                 >
                   <span className="font-heading font-bold tabular-nums">{b.hora}</span>
@@ -116,13 +156,14 @@ export default async function AgendaPage({
           </div>
         )}
 
+        {/* Bloquear una franja puntual */}
         <form
           action={bloquearFranja}
           className="flex flex-wrap items-end gap-2 rounded-xl border border-border bg-card p-4"
         >
           <input type="hidden" name="fecha" value={seleccionado} />
           <label className="flex flex-col gap-1">
-            <span className="text-xs text-marfil-tenue">Hora</span>
+            <span className="text-xs text-marfil-tenue">Bloquear la hora</span>
             <select
               name="hora"
               className="rounded-lg border border-border bg-negro-base px-3 py-2 text-sm text-marfil outline-none focus:border-laton"
@@ -149,7 +190,46 @@ export default async function AgendaPage({
             className="inline-flex items-center gap-1.5 rounded-lg bg-laton px-4 py-2 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
           >
             <Plus className="h-4 w-4" />
-            Bloquear
+            Bloquear hora
+          </button>
+        </form>
+
+        {/* Bloquear un rango (ej. toda la tarde) */}
+        <form
+          action={bloquearRangoAccion}
+          className="mt-2 flex flex-wrap items-end gap-2 rounded-xl border border-border bg-card p-4"
+        >
+          <input type="hidden" name="fecha" value={seleccionado} />
+          <label className="flex flex-col gap-1">
+            <span className="text-xs text-marfil-tenue">Desde</span>
+            <select name="desde" className="rounded-lg border border-border bg-negro-base px-3 py-2 text-sm text-marfil outline-none focus:border-laton">
+              {horasGrid.map((h) => (
+                <option key={h} value={h}>{h}</option>
+              ))}
+            </select>
+          </label>
+          <label className="flex flex-col gap-1">
+            <span className="text-xs text-marfil-tenue">Hasta</span>
+            <select name="hasta" defaultValue={horasGrid[horasGrid.length - 1]} className="rounded-lg border border-border bg-negro-base px-3 py-2 text-sm text-marfil outline-none focus:border-laton">
+              {horasGrid.map((h) => (
+                <option key={h} value={h}>{h}</option>
+              ))}
+            </select>
+          </label>
+          <label className="flex flex-1 flex-col gap-1">
+            <span className="text-xs text-marfil-tenue">Motivo (opcional)</span>
+            <input
+              name="motivo"
+              placeholder="Tarde libre, evento…"
+              className="w-full rounded-lg border border-border bg-negro-base px-3 py-2 text-sm text-marfil outline-none placeholder:text-marfil-tenue/60 focus:border-laton"
+            />
+          </label>
+          <button
+            type="submit"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-laton px-4 py-2 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.02] active:scale-[0.98]"
+          >
+            <Plus className="h-4 w-4" />
+            Bloquear rango
           </button>
         </form>
       </section>
