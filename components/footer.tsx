@@ -18,8 +18,8 @@ export function Footer() {
         transition={spring}
         className="glass glass-edge mx-auto max-w-5xl rounded-2xl p-8 sm:p-10"
       >
-        <div className="grid gap-10 md:grid-cols-3">
-          <div>
+        <div className="grid gap-10 text-center md:grid-cols-3 md:text-left">
+          <div className="flex flex-col items-center md:items-start">
             <Logo size={48} withWordmark />
             <p className="mt-4 font-script text-2xl text-laton-claro">
               Don Antonio
@@ -30,21 +30,21 @@ export function Footer() {
           </div>
 
           <ul className="space-y-4 text-sm">
-            <li className="flex items-start gap-3 text-marfil-tenue">
-              <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-laton-claro" />
+            <li className="flex items-center justify-center gap-3 text-marfil-tenue md:items-start md:justify-start">
+              <MapPin className="h-5 w-5 shrink-0 text-laton-claro md:mt-0.5" />
               <span>Quinchía, Risaralda, Colombia</span>
             </li>
-            <li className="flex items-start gap-3 text-marfil-tenue">
-              <Clock className="mt-0.5 h-5 w-5 shrink-0 text-laton-claro" />
+            <li className="flex items-center justify-center gap-3 text-marfil-tenue md:items-start md:justify-start">
+              <Clock className="h-5 w-5 shrink-0 text-laton-claro md:mt-0.5" />
               <span>Lun a Sáb · 9:00 a 18:00</span>
             </li>
-            <li className="flex items-start gap-3 text-marfil-tenue">
-              <Phone className="mt-0.5 h-5 w-5 shrink-0 text-laton-claro" />
+            <li className="flex items-center justify-center gap-3 text-marfil-tenue md:items-start md:justify-start">
+              <Phone className="h-5 w-5 shrink-0 text-laton-claro md:mt-0.5" />
               <span>+57 300 000 0000</span>
             </li>
           </ul>
 
-          <div className="flex flex-col items-start gap-3">
+          <div className="flex flex-col items-center gap-3 md:items-start">
             <p className="text-sm text-marfil-tenue">
               ¿Dudas? Escríbenos directo.
             </p>
