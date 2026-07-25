@@ -1,0 +1,88 @@
+// Base de datos de la demo Don Antonio — SQLite local vía Prisma.
+// `estado` de Reserva se maneja como String (SQLite no tiene enums nativos):
+// 'pendiente' | 'atendida' | 'cancelada'.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Servicio {
+  id          String  @id
+  categoria   String
+  nombre      String
+  descripcion String
+  precio      Int // COP
+  duracion    Int // minutos
+  activo      Boolean @default(true)
+  orden       Int     @default(0)
+
+  reservas ReservaServicio[]
+}
+
+model Cliente {
+  id        String   @id @default(cuid())
+  nombre    String
+  celular   String   @unique
+  email     String
+  createdAt DateTime @default(now())
+
+  reservas Reserva[]
+}
+
+model Reserva {
+  id            String   @id @default(cuid())
+  codigo        String   @unique
+  cliente       Cliente  @relation(fields: [clienteId], references: [id])
+  clienteId     String
+  fecha         DateTime // día de la cita (medianoche local)
+  hora          String // "HH:MM"
+  estado        String   @default("pendiente")
+  total         Int
+  duracionTotal Int
+  notas         String?
+  createdAt     DateTime @default(now())
+
+  servicios ReservaServicio[]
+
+  @@index([fecha])
+  @@index([clienteId])
+}
+
+// Snapshot de servicio al momento de reservar (precio/duración históricos).
+model ReservaServicio {
+  id         String @id @default(cuid())
+  reserva    Reserva  @relation(fields: [reservaId], references: [id], onDelete: Cascade)
+  reservaId  String
+  servicio   Servicio @relation(fields: [servicioId], references: [id])
+  servicioId String
+  nombre     String
+  precio     Int
+  duracion   Int
+
+  @@index([reservaId])
+}
+
+// Franjas bloqueadas a mano por el barbero (no reservables).
+model Bloqueo {
+  id     String   @id @default(cuid())
+  fecha  DateTime
+  hora   String
+  motivo String?
+
+  @@unique([fecha, hora])
+}
+
+// Configuración de la jornada del barbero (fila única id=1).
+// diasCerrados = CSV de días de semana cerrados (0=Dom … 6=Sáb).
+model Config {
+  id           Int    @id @default(1)
+  apertura     Int    @default(9)
+  cierre       Int    @default(18)
+  pasoMin      Int    @default(15)
+  diasCerrados String @default("0")
+}

@@ -1,0 +1,951 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:is(.dark *));
+
+/* ── Sistema de diseño "El Maestro" ─────────────────────────────
+   Todos los colores de marca apuntan a variables en tiempo de
+   ejecución, de modo que cambiar `data-theme` en <html> reviste
+   TODO el sitio sin tocar un solo componente. */
+@theme inline {
+  --font-sans: var(--font-inter), 'Inter Fallback', system-ui, sans-serif;
+  --font-heading: var(--font-heading-theme);
+  --font-script: var(--font-script-family);
+
+  /* Marca (apuntan a vars temáticas) */
+  --color-negro-base: var(--negro-base);
+  --color-negro-carbon: var(--negro-carbon);
+  --color-marfil: var(--marfil);
+  --color-marfil-tenue: var(--marfil-tenue);
+  --color-laton: var(--laton);
+  --color-laton-claro: var(--laton-claro);
+  --color-laton-profundo: var(--laton-profundo);
+
+  /* Tokens semánticos */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 6px);
+  --radius-2xl: calc(var(--radius) + 12px);
+
+  --animate-aurora: aurora 26s ease-in-out infinite;
+  --animate-shimmer: shimmer 2.4s ease-in-out infinite;
+}
+
+/* ── Tema por defecto · "Clásico Oro" (oscuro + latón) ─────────── */
+:root {
+  color-scheme: dark;
+
+  /* Semánticos */
+  --background: #0f0f0f;
+  --foreground: #f2eee6;
+  --muted-foreground: rgba(242, 238, 230, 0.62);
+  --card: #1a1814;
+  --card-foreground: #f2eee6;
+  --primary: #c9a24b;
+  --primary-foreground: #0f0f0f;
+  --border: rgba(242, 238, 230, 0.1);
+  --ring: #c9a24b;
+  --radius: 1.5rem;
+
+  /* Tipografía de titulares (themeable) */
+  --font-heading-theme: var(--font-sora), var(--font-inter), sans-serif;
+
+  /* Marca */
+  --negro-base: #0f0f0f;
+  --negro-carbon: #1a1814;
+  --marfil: #f2eee6;
+  --marfil-tenue: rgba(242, 238, 230, 0.62);
+  --laton: #c9a24b;
+  --laton-claro: #e0be6a;
+  --laton-profundo: #8c6b2e;
+
+  /* Canales RGB (para rgb(... / alfa)) */
+  --marfil-rgb: 242 238 230;
+  --laton-rgb: 201 162 75;
+  --laton-claro-rgb: 224 190 106;
+  --laton-profundo-rgb: 140 107 46;
+
+  /* Tipografía script temática */
+  --font-script-family: var(--font-sacramento), cursive;
+
+  /* Material vidrio */
+  --glass-bg: rgba(26, 24, 20, 0.55);
+  --glass-shadow:
+    0 18px 50px -12px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 0 rgba(242, 238, 230, 0.12),
+    inset 0 -1px 0 0 rgba(0, 0, 0, 0.4);
+  --glass-fallback: #16140f;
+  --glass-edge: linear-gradient(
+    160deg,
+    rgba(242, 238, 230, 0.35),
+    rgba(242, 238, 230, 0.04) 40%,
+    rgba(0, 0, 0, 0.2)
+  );
+
+  /* Efectos */
+  --selection-bg: rgba(201, 162, 75, 0.3);
+  --shimmer-color: rgba(224, 190, 106, 0.45);
+  --grain-opacity: 0.04;
+  --grain-blend: normal;
+
+  /* Aurora */
+  --aurora-1: rgba(140, 107, 46, 0.22);
+  --aurora-2: rgba(201, 162, 75, 0.15);
+  --aurora-3: rgba(140, 107, 46, 0.18);
+
+  /* Estado / utilidades */
+  --wa: #9fe6a0;
+}
+
+/* ── Prototipo 1 · "Vintage Drip" (papel beige + mocca + calle) ─── */
+[data-theme='vintage-drip'] {
+  color-scheme: light;
+
+  /* Semánticos — papel envejecido + tinta espresso */
+  --background: #e9dcc2;
+  --foreground: #2f2418;
+  --muted-foreground: rgba(47, 36, 24, 0.62);
+  --card: #f4ead2;
+  --card-foreground: #2f2418;
+  --primary: #b5632a;
+  --primary-foreground: #fbf2dd;
+  --border: rgba(47, 36, 24, 0.16);
+  --ring: #b5632a;
+  --radius: 1.1rem;
+
+  /* Marca remapeada al universo mocca */
+  --negro-base: #28200f;
+  --negro-carbon: #322715;
+  --marfil: #2f2418; /* "marfil" = tinta legible sobre papel */
+  --marfil-tenue: rgba(47, 36, 24, 0.6);
+  --laton: #b5632a; /* CTA caramelo quemado */
+  --laton-claro: #9a4a18; /* acento rust legible sobre crema */
+  --laton-profundo: #6a3410;
+
+  --marfil-rgb: 47 36 24;
+  --laton-rgb: 181 99 42;
+  --laton-claro-rgb: 154 74 24;
+  --laton-profundo-rgb: 106 52 16;
+
+  --font-script-family: var(--font-script-vintage), var(--font-sacramento), cursive;
+
+  /* Vidrio crema esmerilada */
+  --glass-bg: rgba(247, 239, 220, 0.74);
+  --glass-shadow:
+    0 16px 40px -16px rgba(82, 50, 18, 0.4),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.65),
+    inset 0 -1px 0 0 rgba(120, 80, 40, 0.18);
+  --glass-fallback: #f1e7cf;
+  --glass-edge: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.7),
+    rgba(255, 255, 255, 0.04) 42%,
+    rgba(120, 78, 36, 0.18)
+  );
+
+  --selection-bg: rgba(181, 99, 42, 0.28);
+  --shimmer-color: rgba(181, 99, 42, 0.32);
+  --grain-opacity: 0.07;
+  --grain-blend: multiply;
+
+  --aurora-1: rgba(181, 99, 42, 0.16);
+  --aurora-2: rgba(214, 160, 92, 0.22);
+  --aurora-3: rgba(150, 92, 48, 0.12);
+
+  --wa: #3f7d4f;
+}
+
+/* ── Prototipo 3 · "Neón Nocturno" (azabache azulado + cian eléctrico) ── */
+[data-theme='neon-nocturno'] {
+  color-scheme: dark;
+
+  /* Semánticos — noche urbana */
+  --background: #0b0f14;
+  --foreground: #e8eef5;
+  --muted-foreground: rgba(232, 238, 245, 0.6);
+  --card: #141b24;
+  --card-foreground: #e8eef5;
+  --primary: #22d3ee;
+  --primary-foreground: #04222b;
+  --border: rgba(232, 238, 245, 0.1);
+  --ring: #22d3ee;
+  --radius: 1rem;
+
+  /* Marca remapeada al universo neón */
+  --negro-base: #070a0e;
+  --negro-carbon: #141b24;
+  --marfil: #e8eef5;
+  --marfil-tenue: rgba(232, 238, 245, 0.6);
+  --laton: #22d3ee; /* CTA cian eléctrico */
+  --laton-claro: #67e8f9; /* acento claro (eyebrows, links) sobre azabache */
+  --laton-profundo: #0e7490;
+
+  --marfil-rgb: 232 238 245;
+  --laton-rgb: 34 211 238;
+  --laton-claro-rgb: 103 232 249;
+  --laton-profundo-rgb: 14 116 144;
+
+  --font-script-family: var(--font-sacramento), cursive;
+
+  /* Vidrio nocturno frío con brillo cian */
+  --glass-bg: rgba(20, 27, 36, 0.55);
+  --glass-shadow:
+    0 18px 50px -12px rgba(0, 0, 0, 0.75),
+    0 0 32px -18px rgba(34, 211, 238, 0.5),
+    inset 0 1px 0 0 rgba(232, 238, 245, 0.12),
+    inset 0 -1px 0 0 rgba(0, 0, 0, 0.45);
+  --glass-fallback: #101720;
+  --glass-edge: linear-gradient(
+    160deg,
+    rgba(103, 232, 249, 0.4),
+    rgba(232, 238, 245, 0.05) 42%,
+    rgba(0, 0, 0, 0.3)
+  );
+
+  --selection-bg: rgba(34, 211, 238, 0.32);
+  --shimmer-color: rgba(103, 232, 249, 0.5);
+  --grain-opacity: 0.05;
+  --grain-blend: normal;
+
+  --aurora-1: rgba(34, 211, 238, 0.18);
+  --aurora-2: rgba(168, 85, 247, 0.16);
+  --aurora-3: rgba(56, 189, 248, 0.14);
+
+  --wa: #4ade80;
+}
+
+/* ── Prototipo 4 · "Art Déco Lux" (ónix + oro + jade, geometría 1920s) ── */
+/* ── Prototipo 4 · "Quinchía Street" (concreto + grafiti, bandera local) ──
+   Paleta anclada a la bandera de Quinchía: amarillo (oro/riqueza),
+   rojo (sangre ancestral + café) y verde (naturaleza). Fondo de muro
+   de concreto, tinta tipo tiza. Verde como acento dominante; amarillo y
+   rojo como salpicaduras de grafiti (sin saturar). */
+[data-theme='street'] {
+  color-scheme: dark;
+
+  /* Semánticos — muro de concreto + tiza */
+  --background: #1f1e1b;
+  --foreground: #f2efe6;
+  --muted-foreground: rgba(242, 239, 230, 0.6);
+  --card: #2a2824;
+  --card-foreground: #f2efe6;
+  --primary: #2fae5f; /* verde bandera */
+  --primary-foreground: #0e0f0d;
+  --border: rgba(242, 239, 230, 0.14);
+  --ring: #2fae5f;
+  --radius: 0.6rem; /* stencil: apenas redondeado */
+
+  /* Titulares condensados de póster callejero */
+  --font-heading-theme: var(--font-street), 'Oswald', 'Arial Narrow', sans-serif;
+
+  /* Marca remapeada al universo concreto/verde */
+  --negro-base: #171613;
+  --negro-carbon: #2a2824;
+  --marfil: #f2efe6;
+  --marfil-tenue: rgba(242, 239, 230, 0.6);
+  --laton: #2fae5f;
+  --laton-claro: #57c982;
+  --laton-profundo: #1c7a41;
+
+  --marfil-rgb: 242 239 230;
+  --laton-rgb: 47 174 95;
+  --laton-claro-rgb: 87 201 130;
+  --laton-profundo-rgb: 28 122 65;
+
+  /* Colores de la bandera de Quinchía (salpicaduras de grafiti) */
+  --q-amarillo: #f5c518;
+  --q-amarillo-rgb: 245 197 24;
+  --q-rojo: #e5402f;
+  --q-rojo-rgb: 229 64 47;
+  --q-verde-rgb: 47 174 95;
+
+  /* Wordmark "Don Antonio" con rotulador de grafiti */
+  --font-script-family: var(--font-marker), var(--font-inter), cursive;
+
+  /* Vidrio de concreto con canto de tiza */
+  --glass-bg: rgba(42, 40, 36, 0.62);
+  --glass-shadow:
+    0 18px 50px -14px rgba(0, 0, 0, 0.75),
+    inset 0 1px 0 0 rgba(242, 239, 230, 0.1),
+    inset 0 -1px 0 0 rgba(0, 0, 0, 0.4);
+  --glass-fallback: #26241f;
+  --glass-edge: linear-gradient(
+    160deg,
+    rgba(242, 239, 230, 0.28),
+    rgba(242, 239, 230, 0.04) 45%,
+    rgba(0, 0, 0, 0.28)
+  );
+
+  --selection-bg: rgba(47, 174, 95, 0.32);
+  --shimmer-color: rgba(87, 201, 130, 0.5);
+  --grain-opacity: 0.07;
+  --grain-blend: normal;
+
+  /* Aurora en los tres colores de la bandera (deriva suave) */
+  --aurora-1: rgba(47, 174, 95, 0.16);
+  --aurora-2: rgba(245, 197, 24, 0.1);
+  --aurora-3: rgba(229, 64, 47, 0.12);
+
+  --wa: #57c982;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  html {
+    @apply font-sans;
+    background-color: var(--background);
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    overflow-x: hidden;
+  }
+  ::selection {
+    background: var(--selection-bg);
+    color: var(--foreground);
+  }
+  /* Foco accesible: anillo de acento */
+  :focus-visible {
+    outline: 2px solid var(--laton);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+/* ── Material de vidrio líquido ───────────────────────────────── */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid transparent;
+  background-clip: padding-box;
+  box-shadow: var(--glass-shadow);
+  position: relative;
+}
+
+/* Borde especular biselado: más claro arriba, oscuro abajo */
+.glass-edge {
+  position: relative;
+}
+.glass-edge::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: var(--glass-edge);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Fallback si no hay backdrop-filter */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass {
+    background: var(--glass-fallback);
+  }
+}
+
+/* ── Animaciones ──────────────────────────────────────────────── */
+@keyframes aurora {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.9;
+  }
+  33% {
+    transform: translate(8%, -6%) scale(1.15);
+    opacity: 1;
+  }
+  66% {
+    transform: translate(-6%, 8%) scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-120%) skewX(-18deg);
+  }
+  60%,
+  100% {
+    transform: translateX(220%) skewX(-18deg);
+  }
+}
+
+/* Barrido de acento sobre CTAs en hover */
+.shimmer-on-hover {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.shimmer-on-hover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 30%,
+    var(--shimmer-color) 50%,
+    transparent 70%
+  );
+  transform: translateX(-120%) skewX(-18deg);
+  transition: opacity 0.2s ease;
+  opacity: 0;
+}
+.shimmer-on-hover:hover::after {
+  opacity: 1;
+  animation: shimmer 1.1s ease forwards;
+}
+
+/* Grano analógico sutil */
+.grain::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  mix-blend-mode: var(--grain-blend);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.text-gradient-laton {
+  background: linear-gradient(
+    135deg,
+    var(--laton-claro),
+    var(--laton) 50%,
+    var(--laton-profundo)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Ocultar scrollbar en carruseles horizontales */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ── Detalles vintage scoped (solo "Vintage Drip") ────────────────
+   Viñeta de foto antigua + textura de papel más cálida, sin afectar
+   a los demás temas ni tocar el marcado de los componentes. */
+[data-theme='vintage-drip'] .grain::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      130% 110% at 50% 30%,
+      transparent 55%,
+      rgba(74, 44, 16, 0.16) 100%
+    );
+}
+
+/* Subrayado "marcador" bajo los eyebrows en vintage */
+[data-theme='vintage-drip'] .vintage-mark {
+  position: relative;
+}
+
+/* Sello/etiqueta con borde troquelado en el ticket vintage */
+[data-theme='vintage-drip'] .vintage-ticket {
+  background-image: radial-gradient(
+    circle at 0 50%,
+    transparent 6px,
+    transparent 6px
+  );
+}
+
+/* ── Estructura conmutada por tema ────────────────────────────────
+   Elementos que solo existen en su tema, alternados por CSS (sin JS,
+   sin flash de hidratación: `data-theme` ya está puesto antes del paint). */
+.deco-only {
+  display: none;
+}
+[data-theme='street'] .deco-only {
+  display: block;
+}
+
+/* Barra de navegación: pill glass (estándar) vs barra callejera */
+.nav-deco {
+  display: none;
+}
+[data-theme='street'] .nav-standard {
+  display: none;
+}
+[data-theme='street'] .nav-deco {
+  display: flex;
+}
+
+/* ── Ornamentos "Quinchía Street" ──────────────────────────────── */
+
+/* Cinta tricolor (bandera de Quinchía) bajo la barra; deriva lateral
+   lenta: identidad en movimiento, sin saturar. */
+[data-theme='street'] .nav-deco {
+  position: relative;
+}
+[data-theme='street'] .nav-deco::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 3px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--q-amarillo) 0 40px,
+    var(--q-rojo) 40px 80px,
+    var(--laton) 80px 120px
+  );
+  background-size: 120px 100%;
+  opacity: 0.9;
+  animation: street-tape 8s linear infinite;
+}
+@keyframes street-tape {
+  to {
+    background-position: 120px 0;
+  }
+}
+
+/* Halo de spray a tres colores tras el logo del hero (respira y bascula) */
+.deco-sunburst {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 300px;
+  height: 300px;
+  translate: -50% -50%;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(closest-side, rgb(var(--q-verde-rgb) / 0.3), transparent 70%) -34px -22px / 62% 62% no-repeat,
+    radial-gradient(closest-side, rgb(var(--q-amarillo-rgb) / 0.22), transparent 70%) 42px -30px / 56% 56% no-repeat,
+    radial-gradient(closest-side, rgb(var(--q-rojo-rgb) / 0.2), transparent 70%) 4px 46px / 64% 64% no-repeat;
+  filter: blur(7px);
+  -webkit-mask: radial-gradient(closest-side, #000 52%, transparent 100%);
+  mask: radial-gradient(closest-side, #000 52%, transparent 100%);
+  animation: street-spray 16s ease-in-out infinite;
+}
+@keyframes street-spray {
+  0%,
+  100% {
+    transform: rotate(-4deg) scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: rotate(4deg) scale(1.06);
+    opacity: 1;
+  }
+}
+
+/* Divisor = mini bandera de Quinchía (amarillo · rojo · verde) */
+.deco-divider {
+  margin: 12px auto 0;
+  width: 66px;
+  height: 5px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: linear-gradient(
+    90deg,
+    var(--q-amarillo) 0 33.33%,
+    var(--q-rojo) 33.33% 66.66%,
+    var(--laton) 66.66% 100%
+  );
+  box-shadow: 0 0 12px -3px rgb(var(--laton-rgb) / 0.5);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   VARIACIÓN ESTRUCTURAL POR TEMA
+   Mecanismo general: `.por-tema` se oculta salvo en su tema (por
+   `data-tema`). Sin JS ni flash (data-theme ya está antes del paint).
+   ══════════════════════════════════════════════════════════════════ */
+.por-tema {
+  display: none !important;
+}
+[data-theme='clasico'] .por-tema[data-tema='clasico'],
+[data-theme='vintage-drip'] .por-tema[data-tema='vintage-drip'],
+[data-theme='neon-nocturno'] .por-tema[data-tema='neon-nocturno'],
+[data-theme='street'] .por-tema[data-tema='street'] {
+  display: revert !important;
+}
+
+/* ── HERO: cada tema compone distinto ─────────────────────────────
+   Clásico/Vintage = centrado (sello, foco). Neón = centrado ancho.
+   Street = cartel callejero alineado a la izquierda. */
+[data-theme='street'] .hero-copy {
+  align-items: flex-start;
+  text-align: left;
+  margin-left: 0;
+  margin-right: auto;
+  max-width: 42rem;
+}
+[data-theme='street'] .hero-line {
+  margin-left: 0;
+}
+[data-theme='street'] .hero-cta {
+  justify-content: flex-start;
+}
+/* En Street el logo del hero se hace a un lado; manda el titular tipo póster */
+[data-theme='street'] .hero-logo {
+  align-self: flex-start;
+}
+
+/* ── SECTION HEADING: alineación por tema ─────────────────────────
+   Street = titulares a la izquierda, tipo fanzine/póster. */
+[data-theme='street'] .section-head {
+  margin-left: 0;
+  text-align: left;
+  align-items: flex-start;
+}
+[data-theme='street'] .section-head .deco-divider {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   FOTOS con tratamiento de color por tema (duotono / tinte).
+   La MISMA foto real se ve dorada, sepia, neón o street según el tema.
+   ══════════════════════════════════════════════════════════════════ */
+.foto {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.foto :is(img) {
+  transition: filter 0.5s ease;
+}
+.foto::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Clásico Oro — dorado cálido con viñeta */
+[data-theme='clasico'] .foto :is(img) {
+  filter: grayscale(0.15) sepia(0.2) contrast(1.06) brightness(0.92) saturate(0.95);
+}
+[data-theme='clasico'] .foto::after {
+  background: linear-gradient(155deg, rgb(var(--laton-rgb) / 0.16), rgba(15, 15, 15, 0.45));
+  mix-blend-mode: overlay;
+}
+
+/* Vintage Drip — sepia de papel */
+[data-theme='vintage-drip'] .foto :is(img) {
+  filter: sepia(0.55) contrast(0.95) brightness(1.04) saturate(0.82);
+}
+[data-theme='vintage-drip'] .foto::after {
+  background: linear-gradient(180deg, rgba(233, 220, 194, 0.08), rgba(181, 99, 42, 0.2));
+  mix-blend-mode: multiply;
+}
+
+/* Neón Nocturno — duotono cian eléctrico */
+[data-theme='neon-nocturno'] .foto :is(img) {
+  filter: grayscale(0.9) contrast(1.18) brightness(0.88);
+}
+[data-theme='neon-nocturno'] .foto::after {
+  background: linear-gradient(150deg, rgb(var(--laton-rgb) / 0.55), rgba(11, 15, 20, 0.55) 80%);
+  mix-blend-mode: color;
+}
+
+/* Quinchía Street — contraste crudo + tinte verde y cinta tricolor */
+[data-theme='street'] .foto :is(img) {
+  filter: contrast(1.14) saturate(1.14) brightness(0.98);
+}
+[data-theme='street'] .foto::after {
+  background:
+    linear-gradient(180deg, transparent 55%, rgba(23, 22, 19, 0.55)),
+    linear-gradient(160deg, rgb(var(--q-verde-rgb) / 0.14), transparent 55%);
+  mix-blend-mode: soft-light;
+}
+[data-theme='street'] .foto::before {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 4px;
+  z-index: 3;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--q-amarillo) 0 20px,
+    var(--q-rojo) 20px 40px,
+    var(--laton) 40px 60px
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   Personalidad por tema: elementos y animaciones exclusivos.
+   Conmutados por CSS según data-theme (sin JS, sin flash).
+   ══════════════════════════════════════════════════════════════════ */
+
+.vintage-only,
+.clasico-only {
+  display: none;
+}
+[data-theme='vintage-drip'] .vintage-only {
+  display: block;
+}
+[data-theme='clasico'] .clasico-only {
+  display: block;
+}
+
+/* Barra retro (solo Vintage Drip) reemplaza la pill estándar */
+.nav-vintage {
+  display: none;
+}
+[data-theme='vintage-drip'] .nav-standard {
+  display: none;
+}
+[data-theme='vintage-drip'] .nav-vintage {
+  display: flex;
+}
+
+/* ═══ VINTAGE DRIP · dinámico y analógico ═══ */
+
+/* Marquesina retro que se desplaza sin fin */
+.marquee {
+  overflow: hidden;
+}
+.marquee-track {
+  display: inline-flex;
+  flex-shrink: 0;
+  white-space: nowrap;
+  will-change: transform;
+  /* Deriva lenta y analógica, más de rótulo viejo que de ticker */
+  animation: marquee 52s linear infinite;
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Parpadeo de rótulo esmaltado viejo sobre el wordmark script */
+[data-theme='vintage-drip'] .vintage-flicker {
+  animation: sign-flicker 7s steps(1, end) infinite;
+}
+@keyframes sign-flicker {
+  0%, 41%, 43%, 61%, 63%, 91%, 93%, 100% {
+    opacity: 1;
+  }
+  42%, 62% {
+    opacity: 0.5;
+  }
+  92% {
+    opacity: 0.72;
+  }
+}
+
+/* Subrayado dibujado a mano que se traza solo (línea viva) */
+.vintage-underline path {
+  stroke: var(--laton);
+  stroke-dasharray: 260;
+  stroke-dashoffset: 260;
+  animation: draw-line 1.5s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+  animation-delay: 0.7s;
+}
+@keyframes draw-line {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Grano analógico con leve temblor (solo vintage) */
+[data-theme='vintage-drip'] .grain::before {
+  animation: grain-jitter 0.7s steps(3, end) infinite;
+}
+@keyframes grain-jitter {
+  0% {
+    transform: translate(0, 0);
+  }
+  33% {
+    transform: translate(-1.5%, 1%);
+  }
+  66% {
+    transform: translate(1%, -1.5%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+/* Divisor vintage: guion — diamante — guion (visible solo en vintage) */
+.vintage-divider {
+  display: none;
+  margin: 12px auto 0;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  color: var(--laton-claro);
+}
+[data-theme='vintage-drip'] .vintage-divider {
+  display: flex;
+}
+.vintage-divider::before,
+.vintage-divider::after {
+  content: '';
+  width: 34px;
+  height: 3px;
+  background: repeating-linear-gradient(
+    90deg,
+    currentColor 0 5px,
+    transparent 5px 9px
+  );
+  opacity: 0.75;
+}
+
+/* ═══ CLÁSICO ORO · lujo nocturno con micro-animaciones ═══ */
+
+/* Foco de luz dorada que respira tras el logo del hero */
+.clasico-spotlight {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 320px;
+  height: 320px;
+  translate: -50% -50%;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(
+    circle,
+    rgb(var(--laton-rgb) / 0.22),
+    transparent 66%
+  );
+  animation: spotlight-breathe 6.5s ease-in-out infinite;
+}
+@keyframes spotlight-breathe {
+  0%, 100% {
+    opacity: 0.65;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.16);
+  }
+}
+
+/* Barrido dorado lento y automático sobre el logo (recorte circular) */
+.clasico-sheen {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 2;
+}
+.clasico-sheen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 42%,
+    rgb(var(--laton-claro-rgb) / 0.55) 50%,
+    transparent 58%
+  );
+  transform: translateX(-130%) skewX(-18deg);
+  animation: clasico-sheen 6s ease-in-out infinite;
+}
+@keyframes clasico-sheen {
+  0%, 70% {
+    transform: translateX(-130%) skewX(-18deg);
+  }
+  85%, 100% {
+    transform: translateX(150%) skewX(-18deg);
+  }
+}
+
+/* Poste de barbería: rayas diagonales en movimiento continuo */
+.barber-pole {
+  width: 9px;
+  border-radius: 999px;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--laton-claro) 0 6px,
+    var(--negro-carbon) 6px 12px
+  );
+  background-size: 100% 34px;
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--laton-rgb) / 0.55),
+    0 0 12px -4px rgb(var(--laton-rgb) / 0.6);
+  animation: barber-move 1.2s linear infinite;
+}
+@keyframes barber-move {
+  to {
+    background-position: 0 -34px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   Panel de administración — paleta Clásico Oro fija (independiente del
+   tema público que haya elegido el visitante en localStorage).
+   ══════════════════════════════════════════════════════════════════ */
+.admin-root {
+  color-scheme: dark;
+
+  --background: #0f0f0f;
+  --foreground: #f2eee6;
+  --muted-foreground: rgba(242, 238, 230, 0.62);
+  --card: #1a1814;
+  --card-foreground: #f2eee6;
+  --primary: #c9a24b;
+  --primary-foreground: #0f0f0f;
+  --border: rgba(242, 238, 230, 0.1);
+  --ring: #c9a24b;
+
+  --font-heading-theme: var(--font-sora), var(--font-inter), sans-serif;
+
+  --negro-base: #0f0f0f;
+  --negro-carbon: #1a1814;
+  --marfil: #f2eee6;
+  --marfil-tenue: rgba(242, 238, 230, 0.62);
+  --laton: #c9a24b;
+  --laton-claro: #e0be6a;
+  --laton-profundo: #8c6b2e;
+
+  --marfil-rgb: 242 238 230;
+  --laton-rgb: 201 162 75;
+  --laton-claro-rgb: 224 190 106;
+  --laton-profundo-rgb: 140 107 46;
+
+  --glass-bg: rgba(26, 24, 20, 0.55);
+  --glass-edge: linear-gradient(
+    160deg,
+    rgba(242, 238, 230, 0.35),
+    rgba(242, 238, 230, 0.04) 40%,
+    rgba(0, 0, 0, 0.2)
+  );
+
+  background: var(--background);
+  color: var(--foreground);
+}
