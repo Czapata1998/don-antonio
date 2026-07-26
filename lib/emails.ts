@@ -123,8 +123,8 @@ function shell(opts: {
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${NEGRO};padding:24px 12px;">
     <tr><td align="center">
       <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:100%;">
-        <!-- barra superior dorada -->
-        <tr><td style="height:4px;background:linear-gradient(90deg,${'#8c6b2e'},${ORO_CLARO},${'#8c6b2e'});border-radius:4px 4px 0 0;font-size:0;line-height:0;">&nbsp;</td></tr>
+        <!-- barra superior dorada (fina y discreta) -->
+        <tr><td style="height:2px;background:${ORO};border-radius:2px 2px 0 0;font-size:0;line-height:0;">&nbsp;</td></tr>
         <tr><td style="background:${CARBON2};border:1px solid ${BORDE};border-top:none;border-radius:0 0 18px 18px;padding:32px 28px;">
           <!-- Encabezado de marca con logo -->
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
@@ -167,20 +167,22 @@ function escapar(s: string): string {
 
 /* ── Correo 1 · CLIENTE (confirmación) ──────────────────────────── */
 export function emailCliente(d: ReservaEmailData) {
-  const primerNombre = d.nombre.trim().split(' ')[0] || 'crack'
+  const primerNombre = d.nombre.trim().split(' ')[0] || ''
+  const saludo = primerNombre ? `Todo listo, ${escapar(primerNombre)}` : 'Todo listo'
   const contenido = `
-    <p style="margin:0 0 6px;font-family:Helvetica,Arial,sans-serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:${ORO_CLARO};">
-      Reserva confirmada
-    </p>
-    <h1 style="margin:0 0 10px;font-family:Georgia,serif;font-size:28px;line-height:1.2;color:${MARFIL};">
-      ¡Listo, ${escapar(primerNombre)}! 💈
-    </h1>
-    <p style="margin:0 0 26px;font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:1.6;color:${TENUE};">
-      Tu cita en <strong style="color:${MARFIL};">${NEGOCIO.nombre}</strong> quedó agendada.
-      Te esperamos el <strong style="color:${MARFIL};">${escapar(d.fecha)}</strong> a las
-      <strong style="color:${MARFIL};">${escapar(d.hora)}</strong>. Guarda tu código
-      <strong style="color:${ORO_CLARO};">${escapar(d.codigo)}</strong>.
-    </p>
+    <div style="text-align:center;">
+      <p style="margin:0 0 8px;font-family:Helvetica,Arial,sans-serif;font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:${ORO_CLARO};">
+        Reserva confirmada
+      </p>
+      <h1 style="margin:0 0 12px;font-family:Georgia,serif;font-weight:normal;font-size:26px;line-height:1.25;color:${MARFIL};">
+        ${saludo}
+      </h1>
+      <p style="margin:0 auto 28px;max-width:400px;font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:1.7;color:${TENUE};">
+        Tu cita quedó agendada. Te esperamos el
+        <strong style="color:${MARFIL};font-weight:600;">${escapar(d.fecha)}</strong> a las
+        <strong style="color:${MARFIL};font-weight:600;">${escapar(d.hora)}</strong>.
+      </p>
+    </div>
     ${ticket(d)}
     <div style="height:28px;"></div>
     ${boton(
@@ -189,12 +191,9 @@ export function emailCliente(d: ReservaEmailData) {
       )}`,
       'Confirmar por WhatsApp',
     )}
-    <p style="margin:28px 0 0;font-family:Georgia,'Times New Roman',serif;font-size:17px;line-height:1.6;color:${MARFIL};text-align:center;">
-      Gracias por preferir a <strong style="color:${ORO_CLARO};">${NEGOCIO.nombre}</strong>. 🙌
-    </p>
-    <p style="margin:8px 0 0;font-family:Helvetica,Arial,sans-serif;font-size:14px;line-height:1.6;color:${TENUE};text-align:center;">
-      ¿Necesitas mover la cita? Respóndenos o escríbenos por WhatsApp.<br>
-      Estamos en <strong style="color:${MARFIL};">${escapar(NEGOCIO.direccion)}</strong>.
+    <p style="margin:30px auto 0;max-width:400px;font-family:Helvetica,Arial,sans-serif;font-size:14px;line-height:1.7;color:${TENUE};text-align:center;">
+      Gracias por confiar en <strong style="color:${MARFIL};font-weight:600;">${NEGOCIO.nombre}</strong>.
+      ¿Necesitas mover la cita? Respóndenos o escríbenos por WhatsApp.
     </p>`
 
   const text = `Reserva confirmada · ${NEGOCIO.nombre}
@@ -208,7 +207,7 @@ Dónde: ${NEGOCIO.direccion}
 WhatsApp: ${waLink(NEGOCIO.whatsapp)}`
 
   return {
-    subject: `✅ Tu cita en ${NEGOCIO.nombre} · ${d.fecha} ${d.hora} (${d.codigo})`,
+    subject: `Tu cita en ${NEGOCIO.nombre} · ${d.fecha} a las ${d.hora}`,
     html: shell({
       preheader: `Cita confirmada para el ${d.fecha} a las ${d.hora}. Código ${d.codigo}.`,
       contenido,
@@ -240,11 +239,11 @@ export function emailBarbero(d: ReservaEmailData) {
           d.nombre,
         )}</p>
         <p style="margin:0;color:${MARFIL};font-size:15px;line-height:1.9;">
-          📱 <a href="${tel}" style="color:${ORO_CLARO};text-decoration:none;">${escapar(
+          <a href="${tel}" style="color:${ORO_CLARO};text-decoration:none;">${escapar(
             d.celular,
           )}</a>
           &nbsp;&nbsp;·&nbsp;&nbsp;
-          ✉️ <a href="mailto:${escapar(d.email)}" style="color:${ORO_CLARO};text-decoration:none;">${escapar(
+          <a href="mailto:${escapar(d.email)}" style="color:${ORO_CLARO};text-decoration:none;">${escapar(
             d.email,
           )}</a>
         </p>
@@ -274,7 +273,7 @@ Código: ${d.codigo}
 WhatsApp cliente: ${wa}`
 
   return {
-    subject: `💈 Nueva cita: ${d.nombre} · ${d.fecha} ${d.hora}`,
+    subject: `Nueva cita: ${d.nombre} · ${d.fecha} a las ${d.hora}`,
     html: shell({
       preheader: `${d.nombre} reservó para el ${d.fecha} a las ${d.hora}.`,
       contenido,

@@ -24,7 +24,7 @@ export const SERVICIOS: Servicio[] = [
     nombre: 'Corte + lavado',
     descripcion: 'Corte completo con lavado y secado.',
     precio: 25000,
-    duracion: 40,
+    duracion: 60,
   },
   {
     id: 'perfilado-barba',
@@ -32,7 +32,7 @@ export const SERVICIOS: Servicio[] = [
     nombre: 'Perfilado de barba',
     descripcion: 'Definición de líneas y arreglo prolijo.',
     precio: 12000,
-    duracion: 20,
+    duracion: 30,
   },
   {
     id: 'afeitado-navaja',
@@ -48,7 +48,7 @@ export const SERVICIOS: Servicio[] = [
     nombre: 'Perfilado de cejas',
     descripcion: 'Limpieza y forma para enmarcar la mirada.',
     precio: 8000,
-    duracion: 10,
+    duracion: 30,
   },
   {
     id: 'diseno-decoracion',
@@ -56,7 +56,7 @@ export const SERVICIOS: Servicio[] = [
     nombre: 'Diseño / decoración',
     descripcion: 'Líneas, figuras y detalles personalizados. Toma su tiempo.',
     precio: 15000,
-    duracion: 45,
+    duracion: 60,
   },
 ]
 
@@ -79,7 +79,9 @@ const NOMBRE_DIA = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
 
 // Horario de atención POR DEFECTO (el barbero lo puede cambiar desde /admin;
 // se guarda en la BD y este objeto solo sirve de respaldo).
-export const HORARIO = { apertura: 9, cierre: 18, pasoMin: 15 } as const
+// pasoMin = 30 → turnos limpios cada media hora (9:00, 9:30, 10:00…).
+// Con duraciones múltiplos de 30, las citas nunca se solapan.
+export const HORARIO = { apertura: 9, cierre: 18, pasoMin: 30 } as const
 // Días cerrados por defecto (0 = domingo).
 export const DIAS_CERRADOS_DEFAULT = [0]
 

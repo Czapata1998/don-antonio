@@ -666,6 +666,69 @@
 }
 
 /* ══════════════════════════════════════════════════════════════════
+   NEÓN NOCTURNO · brillo eléctrico en los acentos (la esencia del neón)
+   ══════════════════════════════════════════════════════════════════ */
+[data-theme='neon-nocturno'] .bg-laton {
+  box-shadow:
+    0 0 24px -3px rgb(var(--laton-rgb) / 0.6),
+    inset 0 0 0 1px rgb(var(--laton-claro-rgb) / 0.5);
+}
+[data-theme='neon-nocturno'] .text-laton-claro,
+[data-theme='neon-nocturno'] .text-gradient-laton {
+  text-shadow: 0 0 10px rgb(var(--laton-claro-rgb) / 0.4);
+}
+[data-theme='neon-nocturno'] .glass-edge {
+  box-shadow:
+    var(--glass-shadow),
+    inset 0 0 0 1px rgb(var(--laton-rgb) / 0.14);
+}
+/* Wordmark "Don Antonio" como rótulo de neón (brilla y titila apenas) */
+[data-theme='neon-nocturno'] .font-script {
+  text-shadow:
+    0 0 5px rgb(var(--laton-claro-rgb) / 0.9),
+    0 0 18px rgb(var(--laton-rgb) / 0.55);
+}
+[data-theme='neon-nocturno'] .hero-copy .font-script {
+  animation: neon-flicker 7s steps(1, end) infinite;
+}
+[data-theme='neon-nocturno'] .hero-copy h1 {
+  text-shadow: 0 0 30px rgb(var(--laton-rgb) / 0.22);
+}
+@keyframes neon-flicker {
+  0%, 44%, 48%, 90%, 100% { opacity: 1; }
+  46% { opacity: 0.72; }
+  92% { opacity: 0.85; }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   QUINCHÍA STREET · más punch de barrio (verde vivo + cinta tricolor)
+   ══════════════════════════════════════════════════════════════════ */
+[data-theme='street'] .bg-laton {
+  box-shadow: 0 8px 22px -8px rgb(var(--laton-rgb) / 0.6);
+}
+/* Cinta tricolor arriba de cada tarjeta de servicio/paso */
+[data-theme='street'] #servicios .glass-edge,
+[data-theme='street'] #como-funciona .glass-edge {
+  position: relative;
+  overflow: hidden;
+}
+[data-theme='street'] #servicios .glass-edge::before,
+[data-theme='street'] #como-funciona .glass-edge::before {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 3px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--q-amarillo) 0 16px,
+    var(--q-rojo) 16px 32px,
+    var(--laton) 32px 48px
+  );
+  opacity: 0.85;
+}
+
+/* ══════════════════════════════════════════════════════════════════
    Personalidad por tema: elementos y animaciones exclusivos.
    Conmutados por CSS según data-theme (sin JS, sin flash).
    ══════════════════════════════════════════════════════════════════ */

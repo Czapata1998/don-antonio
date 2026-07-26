@@ -35,8 +35,10 @@ async function main() {
   // ── Configuración de jornada (fila única) ──────────────────────────
   await prisma.config.upsert({
     where: { id: 1 },
-    update: {},
-    create: { id: 1, apertura: 9, cierre: 18, pasoMin: 15, diasCerrados: '0' },
+    // pasoMin no es configurable por el barbero → se fuerza a 30 (turnos de
+    // media hora). apertura/cierre/diasCerrados sí los maneja él, no se tocan.
+    update: { pasoMin: 30 },
+    create: { id: 1, apertura: 9, cierre: 18, pasoMin: 30, diasCerrados: '0' },
   })
 
   // ── Servicios (fuente de verdad = catálogo del sitio) ──────────────
